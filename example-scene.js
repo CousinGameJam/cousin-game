@@ -16,11 +16,18 @@ class Example extends Phaser.Scene {
         img.setBounce(1, 1);
         img.setCollideWorldBounds(true);
 
-        this.scoreText = this.add.text(40, 30, 'score: 0', {fontSize: '32px', fill: '#fff'});
+        this.scoreText = this.add.text(40, 30, 'score: 0', { fontSize: '32px', fill: '#fff' });
+
+        // Update method will handle the key press
+        this.input.keyboard.on('keydown-N', () => {
+            console.log("[Example] Switching to TilemapDemo scene");
+            this.scene.start('TilemapDemo');
+        });
+
+
     }
 
     update() {
-
     }
 
 }
