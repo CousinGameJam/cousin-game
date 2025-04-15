@@ -54,10 +54,28 @@ class Example extends Phaser.Scene {
             "YOU LOSE!", { fontSize: '64px', fill: '#ff0000' });
         this.loseText.setVisible(false);
 
+
+
+
+        this.add.text(40, 500, 'N - tile map demo', {fontSize: '32px', fill: '#fff'})
+            .setInteractive({useHandCursor: true})
+            .on('pointerup', () => {
+                this.scene.start('TilemapDemo');
+            });
+
+        this.add.text(40, 540, 'M - story demo', {fontSize: '32px', fill: '#fff'})
+            .setInteractive({useHandCursor: true})
+            .on('pointerup', () => {
+                this.scene.start('StoryDemo');
+            });
+
         // Update method will handle the key press
         this.input.keyboard.on('keydown-N', () => {
             console.log("[Example] Switching to TilemapDemo scene");
             this.scene.start('TilemapDemo');
+        });
+        this.input.keyboard.on('keydown-M', () => {
+            this.scene.start('StoryDemo');
         });
     }
 

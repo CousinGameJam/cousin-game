@@ -1,5 +1,6 @@
 import Example from './example-scene.js'
 import TilemapDemo from './src/game/scenes/tilemap-demo-scene.js'
+import StoryDemo from "./src/game/scenes/story-demo-scene.js";
 
 const config = {
     type: Phaser.AUTO,
@@ -7,7 +8,8 @@ const config = {
     height: 600,
     scene: [
         Example,
-        TilemapDemo
+        TilemapDemo,
+        StoryDemo
     ],
     physics: {
         default: 'arcade',
