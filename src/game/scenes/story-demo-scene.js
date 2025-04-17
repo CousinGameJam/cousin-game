@@ -1,3 +1,6 @@
+import Player from "../player.js";
+import Baba from "../baba.js";
+
 class StoryDemo extends Phaser.Scene {
     story;
     currentText;
@@ -11,18 +14,26 @@ class StoryDemo extends Phaser.Scene {
     }
 
     preload() {
+        Baba.preload(this)
+        Player.preload(this)
     }
 
     create() {
-        this.story = new inkjs.Story(window.storyContent);
+        this.cursors = this.input.keyboard.createCursorKeys();
+        
+        this.baba = Baba.create(this, 400, 200)
+        this.player = Player.create(this, 100, 100)
+        this.physics.add.collider(this.player, this.baba, this.talkToBaba, null, this);
 
+        this.story = new inkjs.Story(window.storyContent);
         this.continueButton = this.createContinueButton();
         this.currentText = this.add.text(20, 20, "", {}); // TODO word wrap
 
-        this.continueStory()
+        // this.continueStory()
     }
 
     update() {
+        Player.update(this.player, this.cursors)
     }
 
     continueStory() {
@@ -71,6 +82,12 @@ class StoryDemo extends Phaser.Scene {
     matchCharacterPrefix(text) {
         // e.g. "LG: Hello", means the character Little Girl (LG) saying "Hello"
         return text.match(/^\s*([A-Z]{1,5})\s*:\s*(.*)/);
+    }
+
+    talkToBaba = () => {
+        // TODO disable cursors / input when interacting so the interaction does not start multiple times
+        this.story.ChoosePathString("baba");
+        this.continueStory()
     }
 }
 
