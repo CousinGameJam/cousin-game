@@ -12,6 +12,8 @@ const config = {
         StoryDemo
     ],
     antialias: false,
+    pixelArt: true,
+    roundPixels: true, // Helps reduce sub-pixel blurring/gaps
     physics: {
         default: 'arcade',
         arcade: {

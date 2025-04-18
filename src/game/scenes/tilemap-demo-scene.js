@@ -17,7 +17,7 @@ class TilemapDemo extends Phaser.Scene {
     create() {
         const map = this.make.tilemap({ key: 'map' });
         const decorationTileset = map.addTilesetImage('Decoration', 'decoration-image');
-        const forestTileset = map.addTilesetImage('Forest', 'forest-image');
+        const forestTileset = map.addTilesetImage('Forest', 'forest-image', 16, 16, 1, 1);
         if ([forestTileset, decorationTileset].every( (tileset) => tileset !== null)) {
             console.log('[TilemapDemo] Tileset layers being created');
             const bgLayer = map.createLayer('bg', forestTileset, 0, 0);
@@ -36,6 +36,7 @@ class TilemapDemo extends Phaser.Scene {
         // Camera Controls 
         const camera = this.cameras.main;
         camera.zoom=3
+        camera.roundPixels = true;
         camera.scrollX = -130
         camera.scrollY = 200
         
