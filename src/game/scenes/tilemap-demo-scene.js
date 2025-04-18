@@ -20,7 +20,10 @@ class TilemapDemo extends Phaser.Scene {
         const forestTileset = map.addTilesetImage('Forest', 'forest-image');
         if ([forestTileset, decorationTileset].every( (tileset) => tileset !== null)) {
             console.log('[TilemapDemo] Tileset layers being created');
+            const bgLayer = map.createLayer('bg', forestTileset, 0, 0);
             const groundLayer = map.createLayer('Ground', forestTileset, 0, 0);
+            const wallsLayer = map.createLayer('walls', forestTileset, 0, 0);
+            const collectable = map.createLayer('collectable', decorationTileset, 0, 0);
             const decorationLayer = map.createLayer('Decoration', decorationTileset, 0, 0);
             const decoration1Layer = map.createLayer('Decoration1', decorationTileset, 0, 0);
             // decorationLayer.setCollisionByProperty({ collides: true })
@@ -32,7 +35,10 @@ class TilemapDemo extends Phaser.Scene {
 
         // Camera Controls 
         const camera = this.cameras.main;
-
+        camera.zoom=3
+        camera.scrollX = -130
+        camera.scrollY = 200
+        
         // Click-drag
         let cameraDragStartX;
         let cameraDragStartY;
@@ -53,7 +59,7 @@ class TilemapDemo extends Phaser.Scene {
             // Get the current world point under pointer.
             const worldPoint = camera.getWorldPoint(pointer.x, pointer.y);
             const newZoom = camera.zoom - camera.zoom * 0.001 * deltaY;
-            camera.zoom = Phaser.Math.Clamp(newZoom, 0.25, 3);
+            camera.zoom = Phaser.Math.Clamp(newZoom, 0.25, 4);
 
             // Update camera matrix, so `getWorldPoint` returns zoom-adjusted coordinates.
             camera.preRender();
