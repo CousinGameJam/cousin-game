@@ -1,3 +1,5 @@
+import Player from "../player.js";
+import Baba from "../baba.js";
 
 class TilemapDemo extends Phaser.Scene {
     logStatus;
@@ -12,20 +14,49 @@ class TilemapDemo extends Phaser.Scene {
         this.load.image('decoration-image', 'assets/Tiles/Decorations/Decorations.png'); // Make sure this is the correct image file
         
         this.load.tilemapTiledJSON('map', 'assets/Tiles/intro-forest-map.json');
+
+        Baba.preload(this)
+        Player.preload(this)
     }
 
     create() {
-        const map = this.make.tilemap({ key: 'map' });
-        const decorationTileset = map.addTilesetImage('Decoration', 'decoration-image');
-        const forestTileset = map.addTilesetImage('Forest', 'forest-image', 16, 16, 1, 1);
-        if ([forestTileset, decorationTileset].every( (tileset) => tileset !== null)) {
+        this.createMap();
+        this.setupCharacters();
+        this.setupCamera();
+        this.cursors = this.input.keyboard.createCursorKeys();
+    }
+
+    setupCharacters() {
+        this.player = Player.create(this, 200, 500)
+        this.baba = Baba.create(this, 880, 220)
+        this.physics.add.collider(this.player, this.baba, this.talkToBaba, null, this);
+    }
+
+    setupCamera() {
+        const camera = this.cameras.main;
+        camera.zoom = 3
+        camera.roundPixels = this.game.config.roundPixels;
+        camera.scrollX = -130
+        camera.scrollY = 200
+
+        camera.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight);
+        camera.startFollow(this.player, this.game.config.roundPixels, 0.05, 0.1, -40, 30);
+    }
+
+    createMap() {
+        const camera = this.cameras.main;
+
+        this.map = this.make.tilemap({key: 'map'});
+        const decorationTileset = this.map.addTilesetImage('Decoration', 'decoration-image');
+        const forestTileset = this.map.addTilesetImage('Forest', 'forest-image', 16, 16, 1, 1);
+        if ([forestTileset, decorationTileset].every((tileset) => tileset !== null)) {
             console.log('[TilemapDemo] Tileset layers being created');
-            const bgLayer = map.createLayer('bg', forestTileset, 0, 0);
-            const groundLayer = map.createLayer('Ground', forestTileset, 0, 0);
-            const wallsLayer = map.createLayer('walls', forestTileset, 0, 0);
-            const collectable = map.createLayer('collectable', decorationTileset, 0, 0);
-            const decorationLayer = map.createLayer('Decoration', decorationTileset, 0, 0);
-            const decoration1Layer = map.createLayer('Decoration1', decorationTileset, 0, 0);
+            const bgLayer = this.map.createLayer('bg', forestTileset, 0, 0);
+            const groundLayer = this.map.createLayer('Ground', forestTileset, 0, 0);
+            const wallsLayer = this.map.createLayer('walls', forestTileset, 0, 0);
+            const collectable = this.map.createLayer('collectable', decorationTileset, 0, 0);
+            const decorationLayer = this.map.createLayer('Decoration', decorationTileset, 0, 0);
+            const decoration1Layer = this.map.createLayer('Decoration1', decorationTileset, 0, 0);
             // decorationLayer.setCollisionByProperty({ collides: true })
         } else {
             if (this.logStatus) {
@@ -33,13 +64,6 @@ class TilemapDemo extends Phaser.Scene {
             }
         }
 
-        // Camera Controls 
-        const camera = this.cameras.main;
-        camera.zoom=3
-        camera.roundPixels = true;
-        camera.scrollX = -130
-        camera.scrollY = 200
-        
         // Click-drag
         let cameraDragStartX;
         let cameraDragStartY;
@@ -72,9 +96,10 @@ class TilemapDemo extends Phaser.Scene {
 
     }
 
-    changeScene() {
-        this.scene.start('MainMenu');
+    update() {
+        Player.update(this.player, this.cursors)
     }
+    
 }
 
 export default TilemapDemo;

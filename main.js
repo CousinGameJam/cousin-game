@@ -7,8 +7,8 @@ const config = {
     width: 800,
     height: 600,
     scene: [
-        Example,
         TilemapDemo,
+        Example,
         StoryDemo
     ],
     antialias: false,

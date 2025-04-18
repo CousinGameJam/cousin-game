@@ -1,4 +1,4 @@
-const movementSpeed = 180
+const movementSpeed = 80
 
 const preload = scene => {
     scene.load.spritesheet('player', 'assets/sprites/dante_1.png', {frameWidth: 48, frameHeight: 48});
@@ -6,8 +6,10 @@ const preload = scene => {
 
 const create = (scene, x, y) => {
     const sprite = scene.physics.add.sprite(x, y, 'player')
-    sprite.setScale(2)
+    sprite.setScale(1)
     createAnimations(scene)
+    // TODO add shadow
+    // TODO add colisions (at feet only)
     return sprite;
 };
 
