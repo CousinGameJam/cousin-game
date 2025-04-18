@@ -4,19 +4,26 @@ class TilemapDemo extends Phaser.Scene {
 
     constructor() {
         super('TilemapDemo');
-        this.logStatus = false;
+        this.logStatus = true;
     }
 
     preload() {
-        this.load.image('tiles', 'assets/Tiles/Tileset1xPadding.png');
-        this.load.tilemapTiledJSON('map', 'assets/Tiles/TestForest.json');
+        this.load.image('forest-image', 'assets/Tiles/Tileset1xPadding.png');
+        this.load.image('decoration-image', 'assets/Tiles/Decorations/Decorations.png'); // Make sure this is the correct image file
+        
+        this.load.tilemapTiledJSON('map', 'assets/Tiles/intro-forest-map.json');
     }
 
     create() {
         const map = this.make.tilemap({ key: 'map' });
-        const tileset = map.addTilesetImage('TestForest', 'tiles');
-        if (tileset) {
-            map.createLayer('Ground', tileset, 0, 0);
+        const decorationTileset = map.addTilesetImage('Decoration', 'decoration-image');
+        const forestTileset = map.addTilesetImage('Forest', 'forest-image');
+        if ([forestTileset, decorationTileset].every( (tileset) => tileset !== null)) {
+            console.log('[TilemapDemo] Tileset layers being created');
+            const groundLayer = map.createLayer('Ground', forestTileset, 0, 0);
+            const decorationLayer = map.createLayer('Decoration', decorationTileset, 0, 0);
+            const decoration1Layer = map.createLayer('Decoration1', decorationTileset, 0, 0);
+            // decorationLayer.setCollisionByProperty({ collides: true })
         } else {
             if (this.logStatus) {
                 console.log('[TilemapDemo] Ground: Tileset not found');
@@ -46,7 +53,7 @@ class TilemapDemo extends Phaser.Scene {
             // Get the current world point under pointer.
             const worldPoint = camera.getWorldPoint(pointer.x, pointer.y);
             const newZoom = camera.zoom - camera.zoom * 0.001 * deltaY;
-            camera.zoom = Phaser.Math.Clamp(newZoom, 0.25, 2);
+            camera.zoom = Phaser.Math.Clamp(newZoom, 0.25, 3);
 
             // Update camera matrix, so `getWorldPoint` returns zoom-adjusted coordinates.
             camera.preRender();
