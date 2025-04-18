@@ -1,5 +1,6 @@
-import Player from "../player.js";
-import Baba from "../baba.js";
+import Player from "../characters/player.js";
+import Baba from "../characters/baba.js";
+import createStory from "../util/story-player.js";
 
 class TilemapDemo extends Phaser.Scene {
     logStatus;
@@ -12,7 +13,7 @@ class TilemapDemo extends Phaser.Scene {
     preload() {
         this.load.image('forest-image', 'assets/Tiles/Tileset1xPadding.png');
         this.load.image('decoration-image', 'assets/Tiles/Decorations/Decorations.png'); // Make sure this is the correct image file
-        
+
         this.load.tilemapTiledJSON('map', 'assets/Tiles/intro-forest-map.json');
 
         Baba.preload(this)
@@ -23,13 +24,22 @@ class TilemapDemo extends Phaser.Scene {
         this.createMap();
         this.setupCharacters();
         this.setupCamera();
+        this.story = createStory(this.scene.get('UI'))
         this.cursors = this.input.keyboard.createCursorKeys();
     }
 
     setupCharacters() {
         this.player = Player.create(this, 200, 500)
         this.baba = Baba.create(this, 880, 220)
-        this.physics.add.collider(this.player, this.baba, this.talkToBaba, null, this);
+        this.baba1 = Baba.create(this, 280, 500)
+        this.physics.add.collider(this.player, this.baba1, this.talkToBaba, null, this);
+    }
+
+
+    talkToBaba = () => {
+        console.log("talk baba")
+        // TODO disable cursors / input when interacting so the interaction does not start multiple times
+        this.story.talkTo("baba")
     }
 
     setupCamera() {
@@ -99,7 +109,7 @@ class TilemapDemo extends Phaser.Scene {
     update() {
         Player.update(this.player, this.cursors)
     }
-    
+
 }
 
 export default TilemapDemo;

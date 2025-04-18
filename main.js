@@ -1,5 +1,6 @@
-import Example from './example-scene.js'
+import Example from './src/game/scenes/example-scene.js'
 import TilemapDemo from './src/game/scenes/tilemap-demo-scene.js'
+import UI from './src/game/scenes/ui.js'
 import StoryDemo from "./src/game/scenes/story-demo-scene.js";
 
 const config = {
@@ -9,7 +10,8 @@ const config = {
     scene: [
         TilemapDemo,
         Example,
-        StoryDemo
+        StoryDemo,
+        UI, 
     ],
     antialias: false,
     pixelArt: true,
@@ -17,7 +19,7 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 0 }
+            gravity: {y: 0}
         }
     }
 };
