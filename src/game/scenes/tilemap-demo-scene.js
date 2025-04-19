@@ -24,8 +24,22 @@ class TilemapDemo extends Phaser.Scene {
         this.createMap();
         this.setupCharacters();
         this.setupCamera();
-        this.story = createStory(this.scene.get('UI'))
+        this.setupStory();
         this.cursors = this.input.keyboard.createCursorKeys();
+    }
+
+    setupStory() {
+        this.story = createStory(this,
+            this.scene.get('UI'), {
+            LG: {
+                character: this.player,
+                color: "#a33",
+            },
+            BY: {
+                character: this.baba1,
+                color: "#3a3",
+            }
+        });
     }
 
     setupCharacters() {
@@ -44,7 +58,7 @@ class TilemapDemo extends Phaser.Scene {
 
     setupCamera() {
         const camera = this.cameras.main;
-        camera.zoom = 3
+        camera.zoom = 2
         camera.roundPixels = this.game.config.roundPixels;
         camera.scrollX = -130
         camera.scrollY = 200
