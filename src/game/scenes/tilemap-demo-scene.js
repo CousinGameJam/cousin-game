@@ -23,9 +23,18 @@ class TilemapDemo extends Phaser.Scene {
     create() {
         this.createMap();
         this.setupCharacters();
+        this.createLayers(['Foreground', 'Foreground1']);
+        this.setupCollisions();
         this.setupCamera();
         this.setupStory();
         this.cursors = this.input.keyboard.createCursorKeys();
+    }
+
+    setupCollisions() {
+        // TODO collide with just the bottom part of the player
+        //  (character's head should be able to go over the bottom of a tree) 
+        this.physics.add.collider(this.player, this.layers["Decoration"]);
+        this.physics.add.collider(this.player, this.layers["Decoration1"]);
     }
 
     setupStory() {
@@ -71,22 +80,18 @@ class TilemapDemo extends Phaser.Scene {
         const camera = this.cameras.main;
 
         this.map = this.make.tilemap({key: 'map'});
-        const decorationTileset = this.map.addTilesetImage('Decoration', 'decoration-image');
-        const forestTileset = this.map.addTilesetImage('Forest', 'forest-image', 16, 16, 1, 1);
-        if ([forestTileset, decorationTileset].every((tileset) => tileset !== null)) {
-            console.log('[TilemapDemo] Tileset layers being created');
-            const bgLayer = this.map.createLayer('bg', forestTileset, 0, 0);
-            const groundLayer = this.map.createLayer('Ground', forestTileset, 0, 0);
-            const wallsLayer = this.map.createLayer('walls', forestTileset, 0, 0);
-            const collectable = this.map.createLayer('collectable', decorationTileset, 0, 0);
-            const decorationLayer = this.map.createLayer('Decoration', decorationTileset, 0, 0);
-            const decoration1Layer = this.map.createLayer('Decoration1', decorationTileset, 0, 0);
-            // decorationLayer.setCollisionByProperty({ collides: true })
-        } else {
-            if (this.logStatus) {
-                console.log('[TilemapDemo] Ground: Tileset not found');
-            }
-        }
+        this.tilesets = [
+            this.map.addTilesetImage('Decoration', 'decoration-image'),
+            this.map.addTilesetImage('Forest', 'forest-image', 16, 16, 1, 1),
+        ]
+        this.layers = {};
+        this.createLayers(['Ground', 'Decoration', 'Decoration1', 'Collectable']);
+
+        // Collisions:
+        // in Tiled see Tilesets part -> Edit Tileset toolbar button (at the bottom),
+        // select tile (e.g. bottom of a tree) edit collision polygon, ...
+        this.layers["Decoration"].setCollisionFromCollisionGroup();
+        this.layers["Decoration1"].setCollisionFromCollisionGroup();
 
         // Click-drag
         let cameraDragStartX;
@@ -118,6 +123,12 @@ class TilemapDemo extends Phaser.Scene {
             camera.scrollY -= newWorldPoint.y - worldPoint.y;
         });
 
+    }
+
+    createLayers(names) {
+        names.forEach(layerName => {
+                this.layers[layerName] = this.map.createLayer(layerName, this.tilesets, 0, 0)
+            })
     }
 
     update() {
